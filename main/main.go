@@ -27,6 +27,10 @@ func main() {
 	if operator != "+" && operator != "-" && operator != "*" && operator != "/" {
 		log.Fatal("помилка: введено не оператор")
 	}
+	//введення другого числа
+	fmt.Print("введіть друге число: ")
+	fmt.Scanln(&input2)
+
 	//  перевірка другого числа на ціле
 	b, err := strconv.Atoi(input2)
 	if err != nil {
