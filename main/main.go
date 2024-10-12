@@ -1,57 +1,64 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
+	"os"
 	"strconv"
+	"strings"
 )
 
 func main() {
-	var input1, input2, operator string
+	reader := bufio.NewReader(os.Stdin)
 
-	//введення першого числа
-	fmt.Print("введіть перше число: ")
-	fmt.Scanln(&input1)
+	// Введення виразу
+	fmt.Print("Введіть вираз (наприклад, 3.5 + 2 * 6 / 3): ")
+	input, _ := reader.ReadString('\n')
+	input = strings.TrimSpace(input)
 
-	// перевірка першого числа на ціле
-	a, err := strconv.Atoi(input1)
-	if err != nil {
-		log.Fatal("Помидка: введено не ціле число")
+	// Розділення виразу на числа і оператори
+	tokens := strings.Fields(input)
+	if len(tokens) == 0 {
+		log.Fatal("Помилка: порожній вираз")
 	}
 
-	// введення оператора
-	fmt.Print("введіть оператор (+, -, *, /): ")
-	fmt.Scanln(&operator)
+	var result float64
+	var currentOperator string
 
-	//перевірка оператора
-	if operator != "+" && operator != "-" && operator != "*" && operator != "/" {
-		log.Fatal("помилка: введено не оператор")
-	}
-	//введення другого числа
-	fmt.Print("введіть друге число: ")
-	fmt.Scanln(&input2)
-
-	//  перевірка другого числа на ціле
-	b, err := strconv.Atoi(input2)
-	if err != nil {
-		log.Fatal("помилка: введено не ціле число")
-	}
-
-	// виконання операції
-	switch operator {
-	case "+":
-		fmt.Printf("результат: %d\n", a+b)
-	case "-":
-		fmt.Printf("результат: %d\n", a-b)
-	case "*":
-		fmt.Printf("результат: %d\n", a*b)
-	case "/":
-		if b == 0 {
-			log.Fatal("помилка: ділення на нуль")
+	for i, token := range tokens {
+		// Парсинг чисел
+		if num, err := strconv.ParseFloat(token, 64); err == nil {
+			if i == 0 {
+				// Якщо перше число, встановлюємо його як результат
+				result = num
+			} else {
+				// Застосування оператора
+				switch currentOperator {
+				case "+":
+					result += num
+				case "-":
+					result -= num
+				case "*":
+					result *= num
+				case "/":
+					if num == 0 {
+						log.Fatal("Помилка: ділення на нуль")
+					}
+					result /= num
+				default:
+					log.Fatal("Помилка: невідомий оператор")
+				}
+			}
+		} else {
+			// Якщо це не число, тоді перевіряємо, чи це оператор
+			if token == "+" || token == "-" || token == "*" || token == "/" {
+				currentOperator = token
+			} else {
+				log.Fatal("Помилка: введено невірний символ")
+			}
 		}
-		fmt.Printf("результат: %d\n", a/b)
-	default:
-		log.Fatal("помилка: невідома операція")
 	}
 
+	fmt.Printf("Результат: %.2f\n", result)
 }
