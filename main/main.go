@@ -6,8 +6,10 @@ import (
 
 func main() {
 	var uahAmount float64
-	uahToUsdRate := 0.0024 // курс гривні к доллару (приблизний)
-	uahToEurRate := 0.0022 // курс гривні к евро (приблизний)
+	// курс гривні к доллару (приблизний)
+	uahToUsdRate := 0.0024
+	// курс гривні к евро (приблизний)
+	uahToEurRate := 0.022
 
 	fmt.Print("Введіть суму в гривнях: ")
 	fmt.Scan(&uahAmount)
